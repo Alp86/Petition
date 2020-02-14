@@ -1,7 +1,8 @@
-const express = require("express");
+const express = require('express');
 const hb = require('express-handlebars');
 const cookieParser = require("cookie-parser");
-const { insert, select, count } = require("./db");
+// const cookieSession = require('cookie-session');
+const { insert, select, count } = require('./db');
 const app = express();
 
 app.engine('handlebars', hb());
@@ -15,6 +16,24 @@ app.use(
 );
 
 app.use(cookieParser());
+// app.use(cookieSession({
+//     secret: `I'm always angry.`,
+//     maxAge: 1000 * 60 * 60 * 24 * 14
+// }));
+
+app.get("/", (req, res) => {
+    // console.log("****************** / ROUTE ************************");
+    // // req.session starts off life as an empty object...
+    //
+    // console.log("req.session: ", req.session);
+    //
+    // req.session.allspice = "<3";
+    //
+    // console.log("req.session after adding...:", req.session);
+    //
+    // console.log("****************** / ROUTE ************************");
+    res.redirect("/petition");
+});
 
 app.get("/petition", (req, res) => {
     if (req.cookies.signed) {
@@ -32,31 +51,31 @@ app.post("/petition", (req, res) => {
         res.redirect("/thanks");
     } else {
         let {first, last, signature} = req.body;
-        if (first == "" || last == "" || signature == "") {
-            res.render("petition", {
-                layout: "main",
-                message: "Seems like something went wrong. Please try again!"
-            });
-        } else {
-            // do insert of submitted data into database
-            insert(first, last, signature)
-            // if there is no error
-                .then(success => {
-                    console.log("success:", success);
-                    // sets cookie to remember
-                    // res.cookie("signed", true);
-                    // redirects to thank you page
-                    res.redirect("/thanks");
-                })
-                .catch(err => {
-                    // if there is an error petition.handlebars is rendered with an error message
-                    console.log("error in insert:", err);
-                    res.render("petition", {
-                        layout: "main",
-                        message: "Seems like something went wrong. Please try again!"
-                    });
+        // if (first == "" || last == "" || signature == "") {
+        //     res.render("petition", {
+        //         layout: "main",
+        //         message: "Seems like something went wrong. Please try again!"
+        //     });
+        // } else {
+        // do insert of submitted data into database
+        insert(first, last, signature)
+        // if there is no error
+            .then(success => {
+                console.log("success:", success);
+                // sets cookie to remember
+                res.cookie("signed", true);
+                // redirects to thank you page
+                res.redirect("/thanks");
+            })
+            .catch(err => {
+                // if there is an error petition.handlebars is rendered with an error message
+                console.log("error in insert:", err);
+                res.render("petition", {
+                    layout: "main",
+                    message: "Seems like something went wrong. Please try again!"
                 });
-        }
+            });
+        // }
     }
 });
 
@@ -81,7 +100,7 @@ app.get("/signers", (req, res) => {
         res.redirect("/petition");
     } else {
         select().then(names => {
-            let signerNames = names.rows[0];
+            let signerNames = names.rows;
             console.log(names.rows);
             res.render("signers", {
                 layout: "main",
