@@ -19,7 +19,7 @@ canvas.addEventListener("mousemove", event => {
     }
 });
 
-canvas.addEventListener("mouseup", event => {
+document.addEventListener("mouseup", () => {
     if (drawing) {
         context.closePath();
         drawing = false;

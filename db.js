@@ -5,14 +5,15 @@ const db = spicedPg(`postgres://postgres:postgres@localhost:5432/petition`);
 exports.insert = function(first, last, signature) {
     return db.query(
         `INSERT INTO petition (first, last, signature)
-        VALUES ($1, $2, $3)`,
+        VALUES ($1, $2, $3)
+        Returning id`,
         [first, last, signature]
     );
 };
 
 exports.select = function() {
     return db.query(
-        `SELECT first || ' ' || last AS "fullname" FROM petition`
+        `SELECT * FROM petition`
     );
 };
 

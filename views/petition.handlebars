@@ -21,5 +21,10 @@
         <label for="signature">Signature</label>
     </div>
 
+    <!-- csurf -->
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
     <input type="submit" name="submit" value="Submit">
 </form>
+
+<script src="/petition.js"></script>
