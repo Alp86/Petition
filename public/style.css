@@ -1,9 +1,34 @@
 * {
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: #222831;
+    color: #00adb5;
+    width: 100vw;
+}
+
+/* div#sign-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    height: 700px;
+} */
+
+img#sign {
+    height: 600px;
+    width: auto;
+}
+
+
 body {
-    background-color: skyblue;
+    margin: 0;
+    background-color: #eeeeee;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,8 +37,10 @@ body {
 }
 
 canvas {
-    border: dashed 2px black;
+    border: solid 1px grey;
+    border-radius: 5px;
     margin-bottom: 10px;
+    background-color: white;
 }
 
 form {
@@ -25,10 +52,10 @@ form {
 
 input {
     margin: 10px;
-}
-
-input[name="submit"] {
-    width: 100px;
+    padding: 5px;
+    border-radius: 5px;
+    border: solid grey 1px;
+    font-size: 14px;
 }
 
 #signature-container {

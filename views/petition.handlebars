@@ -1,30 +1,31 @@
-<h1>Petition to do something important!!! Sign now!!!</h1>
-
+<img id="sign" src="/forbidden-sign.png">
 
 <form method="post">
     <p id="message">{{message}}</p>
     <div id="name">
         <div class="name">
-            <input type="text" name="first">
-            <label for="first">First Name</label>
+            <input type="text" name="first" placeholder="First name">
+            <!-- <label for="first">First Name</label> -->
         </div>
 
         <div class="name">
-            <input type="text" name="last">
-            <label for="last">Last Name</label>
+            <input type="text" name="last" placeholder="Signature">
+            <!-- <label for="last">Last Name</label> -->
         </div>
     </div>
 
     <div id="signature-container">
         <input type="hidden" id=signature name="signature">
         <canvas id="canvas" width="300" height="100"></canvas>
-        <label for="signature">Signature</label>
+        <!-- <p>Sign here</p> -->
+        <!-- <label for="signature">Signature</label> -->
     </div>
 
     <!-- csurf -->
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
 
-    <input type="submit" name="submit" value="Submit">
+    <button type="submit" name="button">Sign the petition</button>
+    <button type="button" name="reset">Reset Field</button>
 </form>
 
 <script src="/petition.js"></script>

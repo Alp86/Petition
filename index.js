@@ -4,7 +4,7 @@ const hb = require('express-handlebars');
 // const cookieParser = require("cookie-parser");
 const cookieSession = require('cookie-session');
 const csurf = require('csurf');
-const { insert, select, count } = require('./db');
+const { insert, select } = require('./db');
 const app = express();
 
 app.engine('handlebars', hb());
