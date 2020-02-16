@@ -7,6 +7,7 @@ var first = true;
 
 resetButton.addEventListener("click", () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
+    signature.value = "";
     signHere();
     first = true;
 });
@@ -17,7 +18,7 @@ var signHere = () => {
     context.textAlign = "center";
     context.textBaseline = "bottom";
     context.beginPath();
-    context.fillText("Signature", 150, 95);
+    context.fillText("Signature", 175, 135);
     context.closePath();
 };
 

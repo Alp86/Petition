@@ -1,31 +1,49 @@
-<img id="sign" src="/forbidden-sign.png">
+<div id="petition-container">
 
-<form method="post">
+    <div id="sodcasting-container">
+
+        <iframe id="urbanDictionary"
+            title="Sodcasting definition"
+            width="600"
+            height="450"
+            src="https://www.urbandictionary.com/define.php?term=Sodcasting">
+        </iframe>
+
+        <iframe id="youtube"
+            width="600"
+            height="400"
+            src="https://www.youtube.com/embed/1X9OdvjVfD8"
+            frameborder="0"
+            gesture="media"
+            allow="encrypted-media"
+            allowfullscreen>
+        </iframe>
+    </div>
+
     <p id="message">{{message}}</p>
-    <div id="name">
-        <div class="name">
-            <input type="text" name="first" placeholder="First name">
-            <!-- <label for="first">First Name</label> -->
+    <div id="petition-content">
+        <img id="sign" src="/forbidden-sign.png">
+        <div id="form-container">
+            <form method="post">
+                <div id="name">
+                    <input type="text" name="first" placeholder="First name">
+                    <input type="text" name="last" placeholder="Last name">
+                </div>
+
+                <div id="signature-container">
+                    <input type="hidden" id=signature name="signature">
+                    <canvas id="canvas" width="350" height="150px"></canvas>
+                </div>
+
+                <!-- csurf -->
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button type="submit" name="submit">Sign the petition</button>
+
+            </form>
+            <button type="button" name="reset">Reset Sig</button>
         </div>
 
-        <div class="name">
-            <input type="text" name="last" placeholder="Signature">
-            <!-- <label for="last">Last Name</label> -->
-        </div>
     </div>
-
-    <div id="signature-container">
-        <input type="hidden" id=signature name="signature">
-        <canvas id="canvas" width="300" height="100"></canvas>
-        <!-- <p>Sign here</p> -->
-        <!-- <label for="signature">Signature</label> -->
-    </div>
-
-    <!-- csurf -->
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-
-    <button type="submit" name="button">Sign the petition</button>
-    <button type="button" name="reset">Reset Field</button>
-</form>
+</div>
 
 <script src="/petition.js"></script>
