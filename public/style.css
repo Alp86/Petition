@@ -95,8 +95,8 @@ img#sign {
 
 canvas {
     border: solid 1px grey;
-    border-top: 0;
-
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
     background-color: white;
 }
 
@@ -113,16 +113,16 @@ input {
     font-size: 14px;
 }
 
-input[name="first"] {
+#form-container input[name="first"] {
     border-top-left-radius: 5px;
 }
 
-input[name="last"] {
+#form-container input[name="last"] {
     border-left: 0;
     border-top-right-radius: 5px;
 }
 
-button[type="submit"] {
+#form-container button[type="submit"] {
     width: 352px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -134,7 +134,7 @@ button[type="submit"] {
     color: #ffffff;
 }
 
-button[name="reset"] {
+#form-container button[name="reset"] {
     margin-left: 5px;
     margin-top: 100px;
     width: 50px;
