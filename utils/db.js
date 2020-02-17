@@ -11,6 +11,13 @@ exports.insertUser = function(first, last, email, password) {
     );
 };
 
+exports.selectUser = function(email) {
+    return db.query(
+        `SELECT first, last, id, password FROM users WHERE email = $1`,
+        [email]
+    );
+};
+
 exports.selectSigners = function() {
     return db.query(
         `SELECT first, last FROM users
@@ -30,7 +37,7 @@ exports.insertSignature = function(user_id, signature) {
 
 exports.selectSignature = function(user_id) {
     return db.query(
-        `SELECT signature FROM signatures WHERE user_id = $1`,
+        `SELECT signature, id FROM signatures WHERE user_id = $1`,
         [user_id]
     );
 };
