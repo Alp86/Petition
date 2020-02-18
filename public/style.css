@@ -14,6 +14,11 @@ body {
     height: 100%;
 }
 
+main {
+    display: flex;
+    flex: 1;
+}
+
 header {
     display: flex;
     flex-direction: row;
@@ -35,13 +40,18 @@ footer {
     color: #ffffff;
 }
 
+footer h6 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 /* Petition page */
 #petition-container {
     display: flex;
     flex-direction: row;
     height: 100%;
     width: 100vw;
-    justify-content:flex-start;
+    justify-content: flex-start;
 }
 
 #sodcasting-container {
@@ -155,7 +165,6 @@ button:focus {
 
 
 #signature-container {
-    /* margin-top: 10px; */
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -169,12 +178,43 @@ button:focus {
 p#message {
     height: 20px;
     color: #c02739;
-    margin-left: 18px;
+    /* margin-left: 18px; */
 }
 
 /* Signers page */
+#signers {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+/* thanks page */
+#thanks-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #sigPic {
     width: 350px;
     height: 150px;
     border: dashed 2px black;
+}
+
+#registration-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#profile-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

@@ -1,8 +1,18 @@
-<h1>Signers of the petition</h1>
-{{#signers}}
-    {{#if url}}
-        <p><a href="{{url}}">{{first}} {{last}}</a> {{#if age}}, {{age}} {{/if}} {{#if city}}, <a href="/signers/{{city}}">{{city}}</a> {{/if}}</p>
-    {{else}}
-        <p>{{first}} {{last}} {{#if age}}, {{age}} {{/if}} {{#if city}}, <a href="/signers/{{city}}">{{city}}</a> {{/if}}</p>
-    {{/if}}
-{{/signers}}
+<div id="signers">
+    <h1>Signers of the petition</h1>
+    {{#signers}}
+        {{#if url}}
+            <p>
+                <a href="{{url}}" target="_blank">{{first}} {{last}}</a>
+                {{#if age}}, {{age}} {{/if}}
+                {{#if city}}, <a href="/signers/{{city}}">{{city}}</a>{{/if}}
+            </p>
+        {{else}}
+            <p>
+                {{first}} {{last}}
+                {{#if age}}, {{age}} {{/if}}
+                {{#if city}}, <a href="/signers/{{city}}">{{city}}</a> {{/if}}
+            </p>
+        {{/if}}
+    {{/signers}}
+</div>

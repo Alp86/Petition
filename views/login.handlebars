@@ -1,7 +1,10 @@
-<form method="post">
-    <h1>Please log in</h1>
-    <input type="text" name="email" placeholder="Email Address">
-    <input type="password" name="password" placeholder="Password">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button type="submit" name="submit">Log in</button>
-</form>
+<div id="login-container">
+    <p id="message">{{message}}</p>
+    <form method="post">
+        <h1>Please log in</h1>
+        <input type="text" name="email" placeholder="Email Address">
+        <input type="password" name="password" placeholder="Password">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" name="submit">Log in</button>
+    </form>
+</div>

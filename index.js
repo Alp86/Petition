@@ -75,7 +75,6 @@ app.post("/register", (req, res) => {
         insertUser(first, last, email, hashedPw)
             .then(result => {
                 const user_id = result.rows[0].id;
-                // sets cookie to remember
                 req.session.user = {
                     userID: user_id,
                     first: first,
@@ -101,14 +100,23 @@ app.get("/profile", (req, res) => {
 });
 
 app.post("/profile", (req, res) => {
-    console.log(req.body);
+    for (var property in req.body) {
+        if (req.body[property] == "") {
+            req.body[property] = null;
+        }
+    }
     const { age, city, url } = req.body;
-    // if (age == "" && city == "" && url == "")
+    console.log("req.body modified:", req.body);
+
     if (!age && !city && !url) {
         res.redirect("/petition");
     } else {
         if (url) {
-            if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("//")) {
+            if (
+                !url.startsWith("http://") &&
+                !url.startsWith("https://") &&
+                !url.startsWith("//")
+            ) {
                 return res.redirect("petition");
             }
         }
@@ -138,30 +146,35 @@ app.post("/login", (req, res) => {
     selectUser(email).then(result => {
         console.log("selectUser result:", result);
         if (!result.rows[0]) {
-            console.log("no such user");
-            //////////////////////////////////////
-            // error message: no such user account
-            //////////////////////////////////////
-
+            res.render("login", {
+                layout: "main",
+                message: "No account found with that email address."
+            });
         } else {
-            if(compare(result.rows[0].password, password)) {
-                req.session.user = {
-                    userID: result.rows[0].id,
-                    first: result.rows[0].first,
-                    last: result.rows[0].last,
-                    signatureID: result.rows[0].signatureID
-                };
-                if (result.rows[0].signatureID) {
-                    res.redirect("/petition");
-                } else {
-                    res.redirect("/thanks");
-                }
-
-            } else {
-                //////////////////////////////////////
-                // error message: wrong password
-                //////////////////////////////////////
-            }
+            compare(result.rows[0].password, password)
+                .then(pass => {
+                    if (pass) {
+                        req.session.user = {
+                            userID: result.rows[0].id,
+                            first: result.rows[0].first,
+                            last: result.rows[0].last,
+                            signatureID: result.rows[0].signatureID
+                        };
+                        if (result.rows[0].signatureID) {
+                            res.redirect("/petition");
+                        } else {
+                            res.redirect("/thanks");
+                        }
+                    }
+                    else {
+                        res.render("login", {
+                            layout: "main",
+                            message: "Wrong password."
+                        });
+                    }
+                }).catch(err => {
+                    console.log("error in compare:", err);
+                });
         }
     }).catch(err => {
         console.log("error in selectUser:", err);
