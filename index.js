@@ -3,8 +3,17 @@ const express = require('express');
 const hb = require('express-handlebars');
 const cookieSession = require('cookie-session');
 const csurf = require('csurf');
-const { insertUser, selectUser, selectSigners, insertSignature, selectSignature, countSignatures } = require('./utils/db');
+const { insertUser, selectUser, selectSigners, selectSignersByCity,
+    insertSignature, selectSignature, countSignatures,
+    insertUserProfile } = require('./utils/db');
 const { hash, compare } = require('./utils/bc');
+
+let numSigs = 0;
+countSignatures().then(result => {
+    if (result.rows[0]) {
+        numSigs = result.rows[0].numSigs;
+    }
+});
 
 const app = express();
 app.engine('handlebars', hb());
@@ -44,10 +53,10 @@ app.use((req, res, next) => {
 
 ///////////////////// Routes //////////////////////
 app.get("/", (req, res) => {
-    // res.redirect("/petition");
     res.redirect("/register");
 });
 
+///////////// register /////////////
 app.get("/register", (req, res) => {
     if (req.session.user) {
         res.redirect("/petition");
@@ -59,8 +68,6 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    // You will want to grab the user password provied, i.e. sth like req.body.password
-    // use hash to take user input created the hashed version of PW to store in DB
     const { first, last, email, password } = req.body;
 
     hash(password).then(hashedPw => {
@@ -74,7 +81,7 @@ app.post("/register", (req, res) => {
                     first: first,
                     last: last,
                 };
-                res.redirect("/petition");
+                res.redirect("/profile");
             })
             .catch(error => {
                 console.log("error in insertUser: ", error);
@@ -86,6 +93,40 @@ app.post("/register", (req, res) => {
     });
 });
 
+///////////// profile /////////////
+app.get("/profile", (req, res) => {
+    res.render("profile", {
+        layout: "main"
+    });
+});
+
+app.post("/profile", (req, res) => {
+    console.log(req.body);
+    const { age, city, url } = req.body;
+    // if (age == "" && city == "" && url == "")
+    if (!age && !city && !url) {
+        res.redirect("/petition");
+    } else {
+        if (url) {
+            if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("//")) {
+                return res.redirect("petition");
+            }
+        }
+        // INSERT into user_profiles
+        insertUserProfile(age, city, url, req.session.user.userID)
+            .then( () => {
+                res.redirect("petition");
+            })
+            .catch(err => {
+                console.log("error in insertUserProfile:", err);
+            });
+
+    }
+
+});
+/////////////////////////////////
+
+///////////// login /////////////
 app.get("/login", (req, res) => {
     res.render("login", {
         layout: "main"
@@ -95,29 +136,41 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
     selectUser(email).then(result => {
-        if(compare(result.rows[0].password, password)) {
-            // req.session.userID = result.rows[0].id;
-            req.session.user = {
-                userID: result.rows[0].id,
-                first: result.rows[0].first,
-                last: result.rows[0].last
-            };
-            selectSignature(req.session.user.userID).then(result => {
-                if (result.rows.length == 0) {
+        console.log("selectUser result:", result);
+        if (!result.rows[0]) {
+            console.log("no such user");
+            //////////////////////////////////////
+            // error message: no such user account
+            //////////////////////////////////////
+
+        } else {
+            if(compare(result.rows[0].password, password)) {
+                req.session.user = {
+                    userID: result.rows[0].id,
+                    first: result.rows[0].first,
+                    last: result.rows[0].last,
+                    signatureID: result.rows[0].signatureID
+                };
+                if (result.rows[0].signatureID) {
                     res.redirect("/petition");
                 } else {
-                    req.session.user.signatureID = result.rows[0].id;
                     res.redirect("/thanks");
                 }
-            }).catch(err => {
-                console.log("error in selectSignature:", err);
-            });
+
+            } else {
+                //////////////////////////////////////
+                // error message: wrong password
+                //////////////////////////////////////
+            }
         }
     }).catch(err => {
         console.log("error in selectUser:", err);
     });
 });
+/////////////////////////////////
 
+
+/////////// petition ///////////
 app.get("/petition", (req, res) => {
     // if cookie redirect to thanks
     if (req.session.user.signatureID) {
@@ -143,6 +196,7 @@ app.post("/petition", (req, res) => {
                 const signatureID = result.rows[0].id;
                 // sets cookie to remember
                 req.session.user.signatureID = signatureID;
+                numSigs++;
                 // redirects to thank you page
                 res.redirect("/thanks");
             })
@@ -156,29 +210,45 @@ app.post("/petition", (req, res) => {
             });
     }
 });
+/////////////////////////////////
 
+///////////// thanks /////////////
 app.get("/thanks", (req, res) => {
     if (!req.session.user.signatureID) {
         res.redirect("/petition");
     } else {
 
-        Promise.all([
-            selectSignature(req.session.user.userID),
-            countSignatures()
-        ]).then(results => {
-            const signature = results[0].rows[0].signature;
-            const numSigs = results[1].rows[0].numSigs;
-            res.render("thanks", {
-                layout: "main",
-                numSigs: numSigs,
-                signature: signature
+        selectSignature(req.session.user.userID)
+            .then(result => {
+                const signature = result.rows[0].signature;
+                res.render("thanks", {
+                    layout: "main",
+                    numSigs: numSigs,
+                    signature: signature
+                });
+            }).catch(err => {
+                console.log("error in selectSignature:", err);
             });
-        }).catch(err => {
-            console.log("error in Promise.all:", err);
-        });
+
+        // Promise.all([
+        //     selectSignature(req.session.user.userID),
+        //     countSignatures()
+        // ]).then(results => {
+        //     const signature = results[0].rows[0].signature;
+        //     const numSigs = results[1].rows[0].numSigs;
+        //     res.render("thanks", {
+        //         layout: "main",
+        //         numSigs: numSigs,
+        //         signature: signature
+        //     });
+        // }).catch(err => {
+        //     console.log("error in Promise.all:", err);
+        // });
     }
 });
+//////////////////////////////////
 
+///////////// signers /////////////
 app.get("/signers", (req, res) => {
     if (!req.session.user.signatureID) {
         res.redirect("/petition");
@@ -195,6 +265,26 @@ app.get("/signers", (req, res) => {
         });
     }
 });
+
+app.get("/signers/:city", (req, res) => {
+    if (!req.session.user.signatureID) {
+        res.redirect("/petition");
+    } else {
+        selectSignersByCity(req.params.city)
+            .then( result => {
+                console.log("selectSignersByCity result:", result);
+
+                let signers = result.rows;
+                res.render("signers", {
+                    layout: "main",
+                    signers
+                });
+            }).catch(err => {
+                console.log("error in selectSignersByCity:", err);
+            });
+    }
+});
+//////////////////////////////////////
 
 app.listen(8080, () => console.log(
     "petition server up and running"
