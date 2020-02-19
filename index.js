@@ -6,7 +6,8 @@ const csurf = require('csurf');
 const {
     insertUser, selectUser, selectSigners, selectSignersByCity,
     insertSignature, selectSignature, countSignatures,
-    insertUserProfile, selectUserProfile, updateUser, updateUserPW, updateProfile
+    insertUserProfile, selectUserProfile, updateUser, updateUserPW,
+    updateProfile, deleteSignature, deleteUser
 } = require('./utils/db');
 const { hash, compare } = require('./utils/bc');
 
@@ -44,7 +45,7 @@ app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
 
     if (!req.session.user && !(req.url.startsWith("/register") || req.url.startsWith("/login"))) {
-        res.redirect("/register");
+        return res.redirect("/register");
     } else {
         next();
     }
@@ -55,13 +56,13 @@ app.use((req, res, next) => {
 
 ///////////////////// Routes //////////////////////
 app.get("/", (req, res) => {
-    res.redirect("/register");
+    return res.redirect("/register");
 });
 
 ///////////// register /////////////
 app.get("/register", (req, res) => {
     if (req.session.user) {
-        res.redirect("/petition");
+        return res.redirect("/petition");
     } else {
         res.render("register", {
             layout: "main"
@@ -82,11 +83,11 @@ app.post("/register", (req, res) => {
                     first: first,
                     last: last,
                 };
-                res.redirect("/profile");
+                return res.redirect("/profile");
             })
             .catch(error => {
                 console.log("error in insertUser: ", error);
-                res.render("/register", {
+                res.render("register", {
                     layout: "main",
                     message: "Ups something went wrong. Please try again!"
                 });
@@ -146,7 +147,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
     selectUser(email).then(result => {
         console.log("selectUser result:", result);
         if (!result.rows[0]) {
@@ -155,7 +156,7 @@ app.post("/login", (req, res) => {
                 message: "No account found with that email address."
             });
         } else {
-            compare(result.rows[0].password, password)
+            return compare(password, result.rows[0].password)
                 .then(pass => {
                     if (pass) {
                         req.session.user = {
@@ -204,13 +205,13 @@ app.post("/petition", (req, res) => {
     if (req.session.user.signatureID) {
         res.redirect("/thanks");
     } else {
-        const {signature} = req.body;
+        let {signature} = req.body;
         // insert submitted data into database
         insertSignature(req.session.user.userID, signature)
             // if there is no error
             .then(result => {
                 console.log("insertSignature result:", result);
-                const signatureID = result.rows[0].id;
+                let signatureID = result.rows[0].id;
                 // sets cookie to remember
                 req.session.user.signatureID = signatureID;
                 numSigs++;
@@ -232,9 +233,8 @@ app.post("/petition", (req, res) => {
 ///////////// thanks /////////////
 app.get("/thanks", (req, res) => {
     if (!req.session.user.signatureID) {
-        res.redirect("/petition");
+        return res.redirect("/petition");
     } else {
-
         selectSignature(req.session.user.userID)
             .then(result => {
                 const signature = result.rows[0].signature;
@@ -253,7 +253,7 @@ app.get("/thanks", (req, res) => {
 ///////////// signers /////////////
 app.get("/signers", (req, res) => {
     if (!req.session.user.signatureID) {
-        res.redirect("/petition");
+        return res.redirect("/petition");
     } else {
         selectSigners().then( result => {
             console.log("selectSigners result:", result);
@@ -270,7 +270,7 @@ app.get("/signers", (req, res) => {
 
 app.get("/signers/:city", (req, res) => {
     if (!req.session.user.signatureID) {
-        res.redirect("/petition");
+        return res.redirect("/petition");
     } else {
         selectSignersByCity(req.params.city)
             .then( result => {
@@ -306,26 +306,34 @@ app.get("/profile/edit", (req, res) => {
 });
 
 app.post("/profile/edit", (req, res) => {
-    const { first, last, email, password, age, city, url} = req.body;
+    let { first, last, email, password, age, city, url} = req.body;
 
     if (password) {
-        Promise.all([
-            updateUserPW(first, last, email, password, req.session.user.userID),
-            updateProfile(age, city, url, req.session.user.userID)
-        ])
-            .then(result => {
-
-            })
-            .catch(err => {
-                console.log("error in edit Promise.all:", err);
-            });
+        hash(password).then(hashedPw => {
+            Promise.all([
+                updateUserPW(first, last, email, hashedPw, req.session.user.userID),
+                updateProfile(age, city, url, req.session.user.userID)
+            ])
+                .then( () => {
+                    return res.redirect("/thanks");
+                })
+                .catch(err => {
+                    console.log("error in editPW Promise.all:", err);
+                    res.render("edit", {
+                        template: "main",
+                        message: "Ups something went wrong. Please try again!"
+                    });
+                });
+        }).catch(err => {
+            console.log("error in hashing password:", err);
+        });
     } else {
         Promise.all([
             updateUser(first, last, email, req.session.user.userID),
             updateProfile(age, city, url, req.session.user.userID)
         ])
-            .then(result => {
-                res.redirect("/thanks");
+            .then( () => {
+                return res.redirect("/thanks");
             })
             .catch(err => {
                 console.log("error in edit Promise.all:", err);
@@ -335,6 +343,38 @@ app.post("/profile/edit", (req, res) => {
                 });
             });
     }
+});
+
+app.post("/thanks/delete", (req, res) => {
+    console.log("received delete request");
+    deleteSignature(req.session.user.userID)
+        .then(() => {
+            console.log("signature has been deleted");
+            delete req.session.user.signatureID;
+            console.log("req.session:", req.session.user);
+            numSigs--;
+            return res.redirect("/petition");
+        })
+        .catch(err => {
+            console.log("error in deleteSignature:", err);
+        });
+});
+
+app.post("/deleteaccount", (req, res) => {
+    deleteUser(req.session.user.userID)
+        .then(() => {
+            numSigs--;
+            delete req.session.user;
+            return res.redirect("/register");
+        })
+        .catch(err => {
+            console.log("error in deleteUser:", err);
+        });
+});
+
+app.post("/logout", (req, res) => {
+    delete req.session.user;
+    res.redirect("/login");
 });
 
 app.listen(process.env.PORT || 8080, () => console.log(

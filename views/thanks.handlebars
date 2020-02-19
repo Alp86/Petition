@@ -2,4 +2,15 @@
     <p>Thank you for signing our petition!</p>
     <img id="sigPic" src="{{signature}}">
     <p><a href="/signers">See all {{numSigs}} signers</a><p>
+    <p><a href="/profile/edit">Edit your profile</a><p>
+
+    <form action="/thanks/delete" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" name="submit">Delete your signature</button>
+    </form>
+
+    <form action="/deleteaccount" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" name="submit">Delete your account</button>
+    </form>
 </div>
