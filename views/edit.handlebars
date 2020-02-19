@@ -1,0 +1,36 @@
+<div id="edit-container">
+
+    <p>Edit your profile</p>
+
+    <form id="edit" method="post">
+        {{#profile}}
+            <label for="first">First name</label>
+            <input type="text" name="first" value="{{first}}">
+
+            <label for="last">Last name</label>
+            <input type="text" name="last" value="{{last}}">
+
+            <label for="email">Email address</label>
+            <input type="text" name="email" value="{{email}}">
+
+            <label for="password">Password</label>
+            <input type="password" name="password">
+
+            <label for="age">Age</label>
+            <input type="text" name="age"
+                {{#if age}} value="{{age}}" {{/if}}>
+
+            <label for="city">City</label>
+            <input type="text" name="city"
+                {{#if city}} value="{{city}}" {{/if}}>
+
+            <label for="url">Homepage</label>
+            <input type="text" name="url"
+                {{#if url}} value="{{url}}" {{/if}}>
+        {{/profile}}
+
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" name="submit">Submit</button>
+
+    </form>
+</div>

@@ -3,9 +3,11 @@ const express = require('express');
 const hb = require('express-handlebars');
 const cookieSession = require('cookie-session');
 const csurf = require('csurf');
-const { insertUser, selectUser, selectSigners, selectSignersByCity,
+const {
+    insertUser, selectUser, selectSigners, selectSignersByCity,
     insertSignature, selectSignature, countSignatures,
-    insertUserProfile } = require('./utils/db');
+    insertUserProfile, selectUserProfile, updateUser, updateUserPW, updateProfile
+} = require('./utils/db');
 const { hash, compare } = require('./utils/bc');
 
 let numSigs = 0;
@@ -94,19 +96,21 @@ app.post("/register", (req, res) => {
 
 ///////////// profile /////////////
 app.get("/profile", (req, res) => {
+    if (req.session.user.profile) {
+        return res.redirect("/petition");
+    }
     res.render("profile", {
         layout: "main"
     });
 });
 
 app.post("/profile", (req, res) => {
-    for (var property in req.body) {
-        if (req.body[property] == "") {
-            req.body[property] = null;
-        }
+    if (req.session.user.profile) {
+        return res.redirect("/petition");
     }
     const { age, city, url } = req.body;
     console.log("req.body modified:", req.body);
+    req.session.user.profile = true;
 
     if (!age && !city && !url) {
         res.redirect("/petition");
@@ -242,21 +246,6 @@ app.get("/thanks", (req, res) => {
             }).catch(err => {
                 console.log("error in selectSignature:", err);
             });
-
-        // Promise.all([
-        //     selectSignature(req.session.user.userID),
-        //     countSignatures()
-        // ]).then(results => {
-        //     const signature = results[0].rows[0].signature;
-        //     const numSigs = results[1].rows[0].numSigs;
-        //     res.render("thanks", {
-        //         layout: "main",
-        //         numSigs: numSigs,
-        //         signature: signature
-        //     });
-        // }).catch(err => {
-        //     console.log("error in Promise.all:", err);
-        // });
     }
 });
 //////////////////////////////////
@@ -298,6 +287,51 @@ app.get("/signers/:city", (req, res) => {
     }
 });
 //////////////////////////////////////
+
+app.get("/profile/edit", (req, res) => {
+
+    selectUserProfile(req.session.user.userID)
+        .then(result => {
+
+            const profile = result.rows[0];
+
+            res.render("edit", {
+                layout: "main",
+                profile
+            });
+        })
+        .catch(err => {
+            console.log("error in selectUserProfile:", err);
+        });
+});
+
+app.post("/profile/edit", (req, res) => {
+    const { first, last, email, password, age, city, url} = req.body;
+
+    if (password) {
+        Promise.all([
+            updateUserPW(first, last, email, password, req.session.user.userID),
+            updateProfile(age, city, url, req.session.user.userID)
+        ])
+            .then(result => {
+
+            })
+            .catch(err => {
+                console.log("error in edit Promise.all:", err);
+            });
+    } else {
+        Promise.all([
+            updateUser(first, last, email, req.session.user.userID),
+            updateProfile(age, city, url, req.session.user.userID)
+        ])
+            .then(result => {
+
+            })
+            .catch(err => {
+                console.log("error in edit Promise.all:", err);
+            });
+    }
+});
 
 app.listen(8080, () => console.log(
     "petition server up and running"

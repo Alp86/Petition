@@ -4,53 +4,67 @@ const db = spicedPg(`postgres://postgres:postgres@localhost:5432/petition`);
 
 exports.insertUser = function(first, last, email, password) {
     return db.query(
-        `INSERT INTO users (first, last, email, password)
+        `
+        INSERT INTO users (first, last, email, password)
         VALUES ($1, $2, $3, $4)
-        Returning id`,
+        Returning id
+        `,
         [first, last, email, password]
     );
 };
 
 exports.selectUser = function(email) {
     return db.query(
-        `SELECT users.*, signatures.id AS "signatureID"
+        `
+        SELECT users.*, signatures.id AS "signatureID"
         FROM users
         LEFT JOIN signatures
         ON users.id = user_id
-        WHERE email = $1`,
+        WHERE email = $1
+        `,
         [email]
     );
 };
 
 exports.selectSigners = function() {
     return db.query(
-        `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url
-        FROM users
-        LEFT JOIN user_profiles
-        ON users.id = user_profiles.user_id
-        JOIN signatures
-        ON users.id = signatures.user_id`
-    );
-};
-
-exports.selectSignersByCity = function(city) {
-    return db.query(
-        `SELECT users.first, users.last, user_profiles.age, user_profiles.city, user_profiles.url
+        `
+        SELECT
+            users.first, users.last,
+            user_profiles.age, user_profiles.city, user_profiles.url
         FROM users
         LEFT JOIN user_profiles
         ON users.id = user_profiles.user_id
         JOIN signatures
         ON users.id = signatures.user_id
-        WHERE user_profiles.city = $1`,
+        `
+    );
+};
+
+exports.selectSignersByCity = function(city) {
+    return db.query(
+        `
+        SELECT
+            users.first, users.last,
+            user_profiles.age, user_profiles.city, user_profiles.url
+        FROM users
+        LEFT JOIN user_profiles
+        ON users.id = user_profiles.user_id
+        JOIN signatures
+        ON users.id = signatures.user_id
+        WHERE user_profiles.city = $1
+        `,
         [city]
     );
 };
 
 exports.insertSignature = function(user_id, signature) {
     return db.query(
-        `INSERT INTO signatures (user_id, signature)
+        `
+        INSERT INTO signatures (user_id, signature)
         VALUES ($1, $2)
-        Returning id`,
+        Returning id
+        `,
         [user_id, signature]
     );
 };
@@ -70,8 +84,59 @@ exports.countSignatures = function() {
 
 exports.insertUserProfile = function(age, city, url, user_id) {
     return db.query(
-        `INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES ($1, $2, $3, $4)`,
+        `
+        INSERT INTO user_profiles (age, city, url, user_id)
+        VALUES ($1, $2, $3, $4)
+        `,
+        [age || null, city || null, url || null, user_id]
+    );
+};
+
+exports.selectUserProfile = function(user_id) {
+    return db.query(
+        `
+        SELECT
+            users.first, users.last, users.email,
+            user_profiles.age, user_profiles.city, user_profiles.url
+        FROM users
+        LEFT JOIN user_profiles
+        ON users.id = user_profiles.user_id
+        WHERE users.id = $1
+        `,
+        [user_id]
+    );
+};
+
+exports.updateUser = function(first, last, email, user_id) {
+    return db.query(
+        `
+        UPDATE users
+        SET first = $1, last = $2, email = $3
+        WHERE id = $4
+        `,
+        [first, last, email, user_id]
+    );
+};
+
+exports.updateUserPW = function(first, last, email, password, id) {
+    return db.query(
+        `
+        UPDATE users
+        SET first = $1, last = $2, email = $3, password = $4
+        WHERE id = $5
+        `,
+        [first, last, email, password, id]
+    );
+};
+
+exports.updateProfile = function(age, city, url, user_id) {
+    return db.query(
+        `
+        INSERT INTO user_profiles (age, city, url, user_id)
+        VALUES $1, $2, $3, $4
+        ON CONFLICT (user_id)
+        DO UPDATE SET age, city, url
+        `,
         [age, city, url, user_id]
     );
 };
