@@ -325,14 +325,18 @@ app.post("/profile/edit", (req, res) => {
             updateProfile(age, city, url, req.session.user.userID)
         ])
             .then(result => {
-
+                res.redirect("/thanks");
             })
             .catch(err => {
                 console.log("error in edit Promise.all:", err);
+                res.render("edit", {
+                    template: "main",
+                    message: "Ups something went wrong. Please try again!"
+                });
             });
     }
 });
 
-app.listen(8080, () => console.log(
+app.listen(process.env.PORT || 8080, () => console.log(
     "petition server up and running"
 ));
