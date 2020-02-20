@@ -33,4 +33,12 @@
         <button type="submit" name="submit">Submit</button>
 
     </form>
+    <br>
+    <br>
+
+    <p>Delete your account</p>
+    <form action="/deleteaccount" method="post">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" name="">Delete account</button>
+    </form>
 </div>

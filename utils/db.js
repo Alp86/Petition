@@ -55,7 +55,7 @@ exports.selectSignersByCity = function(city) {
         ON users.id = user_profiles.user_id
         JOIN signatures
         ON users.id = signatures.user_id
-        WHERE user_profiles.city = $1
+        WHERE LOWER(user_profiles.city) = LOWER($1)
         `,
         [city]
     );

@@ -218,3 +218,19 @@ p#message {
     flex-direction: column;
     justify-content: center;
 }
+
+#nav-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#map-container {
+    display: flex;
+    height: 400px;
+    width: 600px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
