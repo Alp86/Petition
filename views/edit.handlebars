@@ -21,8 +21,16 @@
                 {{#if age}} value="{{age}}" {{/if}}>
 
             <label for="city">City</label>
-            <input type="text" name="city"
+            <input id="autocomplete"
+                placeholder="Enter your city"
+                onFocus="geolocate()"
+                name="city"
+                type="text"
+                autocomplete="off";
                 {{#if city}} value="{{city}}" {{/if}}>
+
+            <!-- <input type="text" name="city"
+                {{#if city}} value="{{city}}" {{/if}}> -->
 
             <label for="url">Homepage</label>
             <input type="text" name="url"
@@ -42,3 +50,9 @@
         <button type="submit" name="">Delete account</button>
     </form>
 </div>
+
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVkHVTeixeZkmrH3LVXIfRwZeeQXJ6gE0&libraries=places&callback=initAutocomplete"
+    async defer>
+</script>
+<script src="/autocomplete.js"></script>
