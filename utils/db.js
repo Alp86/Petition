@@ -140,7 +140,7 @@ exports.updateProfile = function(age, city, url, user_id) {
         ON CONFLICT (user_id)
         DO UPDATE SET age = $1, city = $2, url = $3
         `,
-        [age, city, url, user_id]
+        [age || null, city || null, url || null, user_id]
     );
 };
 
