@@ -3,7 +3,6 @@ var map;
 var markers = [];
 
 function initMap() {
-
     var coord;
     if (document.getElementById("coord-input").value) {
         coord = JSON.parse(document.getElementById("coord-input").value);
@@ -26,6 +25,7 @@ function initMap() {
 }
 
 function initAutocomplete() {
+    initMap();
     function addMarker(coord) {
         var marker = new google.maps.Marker({
             position: coord,
@@ -61,9 +61,4 @@ function initAutocomplete() {
         document.getElementById("coord-input").value = JSON.stringify(coord);
         console.log("coord-input:", document.getElementById("coord-input").value);
     });
-}
-
-function init() {
-    initMap();
-    initAutocomplete();
 }
