@@ -34,7 +34,7 @@ exports.selectSigners = function() {
         `
         SELECT
             users.first, users.last,
-            user_profiles.age, user_profiles.city, user_profiles.url
+            user_profiles.age, user_profiles.city, user_profiles.url, user_profiles.coord
         FROM users
         LEFT JOIN user_profiles
         ON users.id = user_profiles.user_id
@@ -49,7 +49,7 @@ exports.selectSignersByCity = function(city) {
         `
         SELECT
             users.first, users.last,
-            user_profiles.age, user_profiles.city, user_profiles.url
+            user_profiles.age, user_profiles.city, user_profiles.url, user_profiles.coord
         FROM users
         LEFT JOIN user_profiles
         ON users.id = user_profiles.user_id
@@ -85,13 +85,13 @@ exports.countSignatures = function() {
     );
 };
 
-exports.insertUserProfile = function(age, city, url, user_id) {
+exports.insertUserProfile = function(age, city, url, coord, user_id) {
     return db.query(
         `
-        INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO user_profiles (age, city, url, coord, user_id)
+        VALUES ($1, $2, $3, $4, $5)
         `,
-        [age || null, city || null, url || null, user_id]
+        [age || null, city || null, url || null, coord || null, user_id]
     );
 };
 
@@ -100,7 +100,7 @@ exports.selectUserProfile = function(user_id) {
         `
         SELECT
             users.first, users.last, users.email,
-            user_profiles.age, user_profiles.city, user_profiles.url
+            user_profiles.age, user_profiles.city, user_profiles.url, user_profiles.coord
         FROM users
         LEFT JOIN user_profiles
         ON users.id = user_profiles.user_id
@@ -132,15 +132,15 @@ exports.updateUserPW = function(first, last, email, password, id) {
     );
 };
 
-exports.updateProfile = function(age, city, url, user_id) {
+exports.updateProfile = function(age, city, url, coord, user_id) {
     return db.query(
         `
-        INSERT INTO user_profiles (age, city, url, user_id)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO user_profiles (age, city, url, coord, user_id)
+        VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (user_id)
-        DO UPDATE SET age = $1, city = $2, url = $3
+        DO UPDATE SET age = $1, city = $2, url = $3, coord = $4
         `,
-        [age || null, city || null, url || null, user_id]
+        [age || null, city || null, url || null, coord || null, user_id]
     );
 };
 

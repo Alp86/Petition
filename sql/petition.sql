@@ -23,5 +23,6 @@ CREATE TABLE user_profiles(
     age INT,
     city VARCHAR,
     url VARCHAR,
+    coord TEXT,
     user_id INT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE
 );

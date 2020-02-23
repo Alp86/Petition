@@ -16,12 +16,15 @@
         {{/if}}
     {{/signers}}
 </div>
+<input type="hidden" id="coords" value="{{coords}}">
 
 <div id="map-container">
     <div id="map"></div>
     <script
-        src=""
+        src="https://maps.googleapis.com/maps/api/js?key={{apiKey}}&callback=initMap"
         async defer>
     </script>
-    <script src="/map.js"></script>
+    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js">
+    </script>
+    <script src="/map_signers.js"></script>
 </div>

@@ -5,6 +5,7 @@ const cookieSession = require('cookie-session');
 const csurf = require('csurf');
 const { countSignatures } = require('./utils/db');
 
+
 ///////////////////////////////////////////////////
 
 ////////////////////// Global variables /////////////////////

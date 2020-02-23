@@ -3,22 +3,24 @@
         <input type="text" name="age" placeholder="Age">
         <input id="autocomplete"
                placeholder="Enter your city"
-               onFocus="geolocate()"
                name="city"
                type="text"
                autocomplete="off">
         <!-- <input type="text" name="city" placeholder="City"> -->
         <input type="text" name="url" placeholder="Homepage">
+        <input type="hidden" id="coord-input" name="coord">
 
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <button type="submit" name="submit">Continue</button>
     </form>
 </div>
-
+<div id="map-container">
+    <div id="map"></div>
+</div>
 
 
 <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVkHVTeixeZkmrH3LVXIfRwZeeQXJ6gE0&libraries=places&callback=initAutocomplete"
+    src="https://maps.googleapis.com/maps/api/js?key={{apiKey}}&libraries=places&callback=init"
     async defer>
 </script>
-<script src="/autocomplete.js"></script>
+<script src="/map_profile.js"></script>

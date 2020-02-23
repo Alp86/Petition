@@ -1,20 +1,22 @@
-const { app } = require('../index');
+const { app, decNumSigs } = require('../index');
 const { hash } = require('../utils/bc');
 const {
     insertUserProfile, updateUser, updateUserPW,
     selectUserProfile, updateProfile, deleteUser
 } = require('../utils/db');
-
+const secrets = require("../secrets");
 
 app.get("/profile", (req, res) => {
     res.render("profile", {
         layout: "main",
-        login: true
+        login: true,
+        apiKey: secrets.apiKey
     });
 });
 
 app.post("/profile", (req, res) => {
-    const { age, city, url } = req.body;
+    console.log("req.body", req.body);
+    const { age, city, url, coord } = req.body;
 
     if (!age && !city && !url) {
         res.redirect("/petition");
@@ -28,7 +30,7 @@ app.post("/profile", (req, res) => {
                 return res.redirect("petition");
             }
         }
-        insertUserProfile(age, city, url, req.session.user.userID)
+        insertUserProfile(age, city, url, coord, req.session.user.userID)
             .then( () => {
                 res.redirect("petition");
             })
@@ -42,12 +44,13 @@ app.get("/profile/edit", (req, res) => {
 
     selectUserProfile(req.session.user.userID)
         .then(result => {
-
+            console.log("coord:", result.rows[0].coord);
             const profile = result.rows[0];
 
             res.render("edit", {
                 layout: "main",
                 login: true,
+                apiKey: secrets.apiKey,
                 profile
             });
         })
@@ -57,8 +60,8 @@ app.get("/profile/edit", (req, res) => {
 });
 
 app.post("/profile/edit", (req, res) => {
-    let { first, last, email, password, age, city, url} = req.body;
-
+    let { first, last, email, password, age, city, url, coord} = req.body;
+    console.log("req.body edit post:", req.body);
     if (url) {
         if (
             !url.startsWith("http://") &&
@@ -72,18 +75,19 @@ app.post("/profile/edit", (req, res) => {
         hash(password).then(hashedPw => {
             Promise.all([
                 updateUserPW(first, last, email, hashedPw, req.session.user.userID),
-                updateProfile(age, city, url, req.session.user.userID)
+                updateProfile(age, city, url, coord, req.session.user.userID)
             ])
                 .then( () => {
                     return res.redirect("/thanks");
                 })
                 .catch(err => {
                     console.log("error in editPW Promise.all:", err);
-                    res.render("edit", {
-                        template: "main",
-                        login: true,
-                        message: "Ups something went wrong. Please try again!"
-                    });
+                    res.redirect("/profile/edit");
+                    // res.render("edit", {
+                    //     template: "main",
+                    //     login: true,
+                    //     message: "Ups something went wrong. Please try again!"
+                    // });
                 });
         }).catch(err => {
             console.log("error in hashing password:", err);
@@ -91,18 +95,19 @@ app.post("/profile/edit", (req, res) => {
     } else {
         Promise.all([
             updateUser(first, last, email, req.session.user.userID),
-            updateProfile(age, city, url, req.session.user.userID)
+            updateProfile(age, city, url, coord, req.session.user.userID)
         ])
             .then( () => {
                 return res.redirect("/thanks");
             })
             .catch(err => {
                 console.log("error in edit Promise.all:", err);
-                res.render("edit", {
-                    template: "main",
-                    login: true,
-                    message: "Ups something went wrong. Please try again!"
-                });
+                res.redirect("/profile/edit");
+                // res.render("edit", {
+                //     template: "main",
+                //     login: true,
+                //     message: "Ups something went wrong. Please try again!"
+                // });
             });
     }
 });
@@ -110,7 +115,7 @@ app.post("/profile/edit", (req, res) => {
 app.get("/deleteaccount", (req, res) => {
     deleteUser(req.session.user.userID)
         .then(() => {
-            numSigs--;
+            decNumSigs();
             delete req.session.user;
             return res.redirect("/register");
         })
