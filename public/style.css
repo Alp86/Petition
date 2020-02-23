@@ -296,6 +296,11 @@ p#message {
     border-bottom: 0;
 }
 
+#registration-container input[name="first"] {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
 #registration-container button {
     width: 176px;
     padding: 5px;
@@ -358,8 +363,38 @@ p#message {
 #profile-container {
     flex: 1;
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    margin-top: 50px;
+}
+
+#profile-input {
+    display: flex;
+    flex-direction: column;
+    margin-right: 50px;
+}
+
+.profile-input input {
+    border-bottom: 0;
+}
+
+.profile-input input[name="age"] {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#profile-input button {
+    width: 176px;
+    padding: 5px;
+    background-color: #07689f;
+    border: solid 1px lightgrey;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #fafafa;
+}
+
+#profile-input button:hover {
+    background-color: #a2d5f2;
+    border: solid 1px #a2d5f2;
 }
 
 #edit-container {

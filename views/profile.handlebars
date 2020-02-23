@@ -1,24 +1,33 @@
 <div id="profile-container">
-    {{#if error}}
-        {{> error}}
-    {{/if}}
-    <form method="post">
-        <input type="text" name="age" placeholder="Age">
-        <input id="autocomplete"
-               placeholder="Enter your city"
-               name="city"
-               type="text"
-               autocomplete="off">
+    <div id="profile-input">
+        {{#if error}}
+            {{> error}}
+        {{/if}}
+        <form id="profile-form" method="post">
+            <div class="profile-input">
+                <input type="text" name="age" placeholder="Age">
+            </div>
+            <div class="profile-input">
+                <input id="autocomplete"
+                placeholder="Enter your city"
+                name="city"
+                type="text"
+                autocomplete="off">
+            </div>
 
-        <input type="text" name="url" placeholder="Homepage">
-        <input type="hidden" id="coord-input" name="coord">
+            <div class="profile-input">
+                <input type="text" name="url" placeholder="Homepage">
+            </div>
 
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <button type="submit" name="submit">Continue</button>
-    </form>
-</div>
-<div id="map-container">
-    <div id="map"></div>
+            <input type="hidden" id="coord-input" name="coord">
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button type="submit" name="submit">Continue</button>
+        </form>
+    </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
 </div>
 
 
