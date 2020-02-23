@@ -7,15 +7,23 @@ const {
 const apiKey = process.env.apiKey || require("../secrets").apiKey;
 
 app.get("/profile", (req, res) => {
+    let signed;
+    req.session.user.signatureID ? signed = true : signed = false;
+
+    let error;
+    req.session.user.error ? error = true : error = false;
+    delete req.session.user.error;
+
     res.render("profile", {
         layout: "main",
         login: true,
+        signed: signed,
+        error: error,
         apiKey: apiKey
     });
 });
 
 app.post("/profile", (req, res) => {
-    console.log("req.body", req.body);
     const { age, city, url, coord } = req.body;
 
     if (!age && !city && !url) {
@@ -36,6 +44,8 @@ app.post("/profile", (req, res) => {
             })
             .catch(err => {
                 console.log("error in insertUserProfile:", err);
+                req.session.user.error = true;
+                res.redirect("/profile");
             });
     }
 });
@@ -44,12 +54,20 @@ app.get("/profile/edit", (req, res) => {
 
     selectUserProfile(req.session.user.userID)
         .then(result => {
-            console.log("coord:", result.rows[0].coord);
+            let signed;
+            req.session.user.signatureID ? signed = true : signed = false;
+
+            let error;
+            req.session.user.error ? error = true : error = false;
+            delete req.session.user.error;
+
             const profile = result.rows[0];
 
             res.render("edit", {
                 layout: "main",
                 login: true,
+                signed: signed,
+                error: error,
                 apiKey: apiKey,
                 profile
             });
@@ -61,7 +79,6 @@ app.get("/profile/edit", (req, res) => {
 
 app.post("/profile/edit", (req, res) => {
     let { first, last, email, password, age, city, url, coord} = req.body;
-    console.log("req.body edit post:", req.body);
     if (url) {
         if (
             !url.startsWith("http://") &&
@@ -82,15 +99,12 @@ app.post("/profile/edit", (req, res) => {
                 })
                 .catch(err => {
                     console.log("error in editPW Promise.all:", err);
+                    req.session.user.error = true;
                     res.redirect("/profile/edit");
-                    // res.render("edit", {
-                    //     template: "main",
-                    //     login: true,
-                    //     message: "Ups something went wrong. Please try again!"
-                    // });
                 });
         }).catch(err => {
             console.log("error in hashing password:", err);
+            res.redirect("/profile/edit");
         });
     } else {
         Promise.all([
@@ -102,12 +116,8 @@ app.post("/profile/edit", (req, res) => {
             })
             .catch(err => {
                 console.log("error in edit Promise.all:", err);
+                req.session.user.error = true;
                 res.redirect("/profile/edit");
-                // res.render("edit", {
-                //     template: "main",
-                //     login: true,
-                //     message: "Ups something went wrong. Please try again!"
-                // });
             });
     }
 });

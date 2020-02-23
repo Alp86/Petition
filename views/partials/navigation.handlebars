@@ -1,20 +1,63 @@
 <div id="nav-container">
+    <!-- <form action="/cause" method="get">
+        <button type="button" name="cause">Cause</button>
+    </form> -->
+    <div class="nav-link">
+        <a href="/cause">Cause</a>
+
+    </div>
+
     {{#if login}}
-        <form action="/petition" method="get">
-            <button type="submit" name="petition">Home</button>
-        </form>
 
-        <form action="/profile/edit" method="get">
-            <button type="submit" name="profile">Profile</button>
-        </form>
+        {{#if signed}}
+            <!-- <form action="/thanks" method="get">
+                <button type="button" name="petition">Thanks</button>
+            </form> -->
+            <div class="nav-link">
+                <a href="/thanks">Thanks</a>
 
-        <form action="/logout" method="get">
-            <button type="submit" name="logout">Log out</button>
-        </form>
+            </div>
+        {{else}}
+            <!-- <form action="/petition" method="get">
+                <button type="button" name="petition">Petition</button>
+            </form> -->
+            <div class="nav-link">
+                <a href="/petition">Petition</a>
+
+            </div>
+        {{/if}}
+
+        <!-- <form action="/profile/edit" method="get">
+            <button type="button" name="profile">Profile</button>
+        </form> -->
+        <div class="nav-link">
+            <a href="/profile/edit">Profile</a>
+
+        </div>
+
+        <!-- <form action="/logout" method="get">
+            <button type="button" name="logout">Log out</button>
+        </form> -->
+        <div class="nav-link">
+            <a href="/logout">Log out</a>
+
+        </div>
 
     {{else}}
-        <form action="/login" method="get">
-            <button type="submit" name="login">Log in</button>
-        </form>
+        <!-- <form action="/register" method="get">
+            <button type="button" name="register">Register</button>
+        </form> -->
+        <div class="nav-link">
+            <a href="/register">Register</a>
+
+        </div>
+
+        <!-- <form action="/login" method="get">
+            <button type="button" name="login">Log in</button>
+        </form> -->
+        <div class="nav-link">
+            <a href="/login">Log in</a>
+
+        </div>
     {{/if}}
 </div>

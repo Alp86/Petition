@@ -1,5 +1,8 @@
 <div id="registration-container">
-    <p id="message">{{message}}</p>
+    {{#if error}}
+        {{> error}}
+    {{/if}}
+    <h1>Register</h1>
     <form id="register" method="post">
         <input type="text" name="first" placeholder="First name">
         <input type="text" name="last" placeholder="Last name">
@@ -8,5 +11,5 @@
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <button type="submit" name="submit">Register</button>
     </form>
-    <p>Already a member? Continue to the <a href="./login">log in page</a>.</p>
+    <p>Already registered? <a href="./login">Log in here</a>.</p>
 </div>

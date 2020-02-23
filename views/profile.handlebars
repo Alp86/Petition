@@ -1,4 +1,7 @@
 <div id="profile-container">
+    {{#if error}}
+        {{> error}}
+    {{/if}}
     <form method="post">
         <input type="text" name="age" placeholder="Age">
         <input id="autocomplete"
@@ -6,7 +9,7 @@
                name="city"
                type="text"
                autocomplete="off">
-        <!-- <input type="text" name="city" placeholder="City"> -->
+
         <input type="text" name="url" placeholder="Homepage">
         <input type="hidden" id="coord-input" name="coord">
 

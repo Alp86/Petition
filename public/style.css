@@ -3,9 +3,13 @@
     font-family: 'Roboto', sans-serif;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 body {
     margin: 0;
-    background-color: #ffffff;
+    background-color: #fafafa;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -21,56 +25,88 @@ main {
 
 header {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    background-color: #272343;
+    flex-direction: column;
+    align-items: center;
+    background-color: #a2d5f2;
     width: 100vw;
 }
 
 header h1 {
     font-family: 'Raleway', sans-serif;
-    color: #ffffff;
+    color: #fafafa;
+}
+
+#nav-container {
+    display: flex;
+    justify-content: center;
+}
+
+.nav-link {
+    margin: 3px 10px;
+}
+
+.nav-link a {
+    color: #fafafa;
+    text-decoration: none;
+}
+
+.nav-link a:hover{
+    color: #07689f;
 }
 
 footer {
     /* height: 50px; */
     width: 100vw;
-    background-color: #272343;
+    background-color: #a2d5f2;
     padding: 10px 50px;
-    color: #ffffff;
+    color: #fafafa;
 }
 
 footer h6 {
     margin-top: 5px;
     margin-bottom: 5px;
+    color: #07689f;
 }
+
 
 /* Petition page */
 #petition-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     height: 100%;
     width: 100vw;
-    justify-content: flex-start;
+    align-items: center;
 }
 
 #sodcasting-container {
     display: flex;
     flex-direction: column;
     height: 100%;
-    background-color: #e3f6f5;
     padding: 10px;
     margin-left: 10px;
     margin-right: 10px;
 }
 
 .sodcast-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 10px;
     margin-bottom: 10px;
+    color: #ff7e67;
+    text-align: center;
+}
+
+.sodcast-content h3 {
+    color: #07689f;
+}
+
+.sodcast-content a:hover {
+    color: #a2d5f2;
 }
 
 iframe {
-    /* border: 1px solid black; */
+    border: 0;
     padding-top: -30px;
 }
 
@@ -79,35 +115,43 @@ img#sign {
     width: 400px;
     margin-top: 20px;
     margin-bottom: 20px;
+    border-radius: 50%;
 }
 
 #petition-content {
     display: flex;
     flex-direction: column;
-    margin-left: 100px;
+    align-items: center;
+    color: #ff7e67;
+    padding: 5px;
 }
 
 #petition-content h2 {
     width: 360px;
     word-wrap: break-word;
+    text-align: center;
 }
 
 #form-container {
-    margin-left: 25px;
     align-self: flex-start;
     display: flex;
     flex-direction: row;
     align-items:center;
     justify-content: center;
     align-content:space-around;
-
+    margin-left: 55px;
 }
 
 canvas {
-    border: solid 1px grey;
+    border: solid 1px lightgrey;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
+    background-color: #fafafa;
+}
+
+canvas:hover {
     background-color: white;
+    border: solid 1px #07689f;
 }
 
 form {
@@ -119,17 +163,8 @@ form {
 input {
     width: 176px;
     padding: 5px;
-    border: solid grey 1px;
+    border: solid lightgrey 1px;
     font-size: 14px;
-}
-
-#form-container input[name="first"] {
-    border-top-left-radius: 5px;
-}
-
-#form-container input[name="last"] {
-    border-left: 0;
-    border-top-right-radius: 5px;
 }
 
 #form-container button[type="submit"] {
@@ -140,8 +175,13 @@ input {
     border-top: 0;
     font-size: 14px;
     padding: 5px;
-    background-color: #272343;
+    background-color: #07689f;
     color: #ffffff;
+}
+
+#form-container button[type="submit"]:hover {
+    background-color: #a2d5f2;
+    border: solid 1px #a2d5f2;
 }
 
 #form-container button[name="reset"] {
@@ -150,7 +190,7 @@ input {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #bae8e8;
+    background-color: #07689f;
     background-image: url("/refresh-white.png");
     background-repeat: no-repeat;
     background-size: 70%;
@@ -159,10 +199,13 @@ input {
     box-shadow: 0 2px 5px 2px grey;
 }
 
+#form-container button[name="reset"]:hover {
+    background-color: #a2d5f2;
+}
+
 button:focus {
     outline: 0;
 }
-
 
 #signature-container {
     display: flex;
@@ -177,8 +220,8 @@ button:focus {
 
 p#message {
     height: 20px;
-    color: #c02739;
-    /* margin-left: 18px; */
+    color: #c02739 !important;
+
 }
 
 /* Signers page */
@@ -192,24 +235,124 @@ p#message {
 
 /* thanks page */
 #thanks-container {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+}
+
+#thanks-container a {
+    color: #07689f;
+}
+
+#thanks-container a:hover {
+    color: #a2d5f2;
+}
+
+#thanks-container h1 {
+    color: #ff7e67;
+}
+
+#thanks-container button {
+    background-color: #fafafa;
+    color: #07689f;
+    border: 0;
+    text-decoration: underline;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#thanks-container button:hover {
+    color: #a2d5f2;
 }
 
 #sigPic {
     width: 350px;
     height: 150px;
-    border: dashed 2px black;
+    border: dashed 2px #07689f;
+    margin-bottom: 30px;
 }
 
 #registration-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
+}
+
+#registration-container h1 {
+    color: #ff7e67;
+}
+
+#registration-container p {
+    color: #07689f;
+}
+
+#registration-container a:hover {
+    color: #a2d5f2;
+}
+
+#registration-container input {
+    border-bottom: 0;
+}
+
+#registration-container button {
+    width: 176px;
+    padding: 5px;
+    background-color: #07689f;
+    border: solid 1px lightgrey;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #fafafa;
+}
+
+#registration-container button:hover {
+    background-color: #a2d5f2;
+    border: solid 1px #a2d5f2;
+}
+
+/* ----- */
+#login-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#login-container h1 {
+    color: #ff7e67;
+}
+
+#login-container p {
+    color: #07689f;
+}
+
+#login-container a:hover {
+    color: #a2d5f2;
+}
+
+#login-container input {
+    border-bottom: 0;
+}
+
+#login-container input[name="email"] {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+#login-container button {
+    width: 176px;
+    padding: 5px;
+    background-color: #07689f;
+    border: solid 1px lightgrey;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #fafafa;
+}
+
+#login-container button:hover {
+    background-color: #a2d5f2;
+    border: solid 1px #a2d5f2;
 }
 
 #profile-container {
@@ -219,9 +362,78 @@ p#message {
     justify-content: center;
 }
 
-#nav-container {
+#edit-container {
     display: flex;
-    justify-content: flex-end;
+    margin-top: 50px;
+}
+
+#edit-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 50px;
+}
+
+#edit-input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 50px;
+}
+
+.edit-input {
+    display: flex;
+}
+
+.edit-input input {
+    border-bottom: 0;
+}
+
+.edit-input input[name="first"] {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.edit-input label {
+    width: 120px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#edit-form button {
+    margin-left: 120px;
+    width: 176px;
+    padding: 5px;
+    background-color: #07689f;
+    border: solid 1px lightgrey;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color: #fafafa;
+}
+
+#edit-form button:hover {
+    background-color: #a2d5f2;
+    border: solid 1px #a2d5f2;
+}
+
+#delete-account {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#delete-button {
+    text-align: left;
+    background-color: #fafafa;
+    color: #ff7e67;
+    border: 0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#delete-button:hover {
+    color: #c02739;
 }
 
 #map-container {
@@ -233,4 +445,23 @@ p#message {
 #map {
     height: 100%;
     width: 100%;
+}
+
+#signers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+#signers-container h1 {
+    color: #ff7e67;
+}
+
+#signers-container a {
+    color: #07689f;
+}
+
+#signers-container a:hover {
+    color: #a2d5f2;
 }

@@ -1,1 +1,5 @@
-<p id="message">{{message}}</p>
+{{#if message}}
+    <p id="message">{{message}}</p>
+{{else}}
+    <p id="message">Ups something went wrong. Please try again.</p>
+{{/if}}

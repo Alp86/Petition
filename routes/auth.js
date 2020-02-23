@@ -30,13 +30,14 @@ app.post("/register", requireLoggedOutUser, (req, res) => {
                 res.render("register", {
                     layout: "main",
                     login: false,
-                    message: "Ups something went wrong. Please try again!"
+                    error: true
                 });
             });
     });
 });
 
 app.get("/login", requireLoggedOutUser, (req, res) => {
+    console.log("login request received");
     res.render("login", {
         layout: "main",
         login: false
@@ -50,6 +51,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
             res.render("login", {
                 layout: "main",
                 login: false,
+                error: true,
                 message: "No account found with that email address."
             });
         } else {
@@ -71,6 +73,7 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
                     else {
                         res.render("login", {
                             layout: "main",
+                            error: true,
                             message: "Wrong password."
                         });
                     }
@@ -85,5 +88,5 @@ app.post("/login", requireLoggedOutUser, (req, res) => {
 
 app.get("/logout", (req, res) => {
     delete req.session.user;
-    res.redirect("/login");
+    res.redirect("/cause");
 });

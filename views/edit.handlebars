@@ -1,60 +1,77 @@
 <div id="edit-container">
 
-    <p>Edit your profile</p>
-    <p id="message">{{message}}</p>
-    <form id="edit" method="post">
-        {{#profile}}
-            <label for="first">First name</label>
-            <input type="text" name="first" value="{{first}}">
+    <div id="edit-input">
+        <!-- <p>Edit your profile</p> -->
+        {{#if error}}
+        {{> error}}
+        {{/if}}
+        <form id="edit-form" method="post">
+            {{#profile}}
 
-            <label for="last">Last name</label>
-            <input type="text" name="last" value="{{last}}">
+            <div class="edit-input">
+                <label for="first">First name</label>
+                <input type="text" name="first" value="{{first}}">
+            </div>
 
-            <label for="email">Email address</label>
-            <input type="text" name="email" value="{{email}}">
+            <div class="edit-input">
+                <label for="last">Last name</label>
+                <input type="text" name="last" value="{{last}}">
+            </div>
 
-            <label for="password">Password</label>
-            <input type="password" name="password">
+            <div class="edit-input">
+                <label for="email">Email address</label>
+                <input type="text" name="email" value="{{email}}">
+            </div>
 
-            <label for="age">Age</label>
-            <input type="text" name="age"
+            <div class="edit-input">
+                <label for="password">Password</label>
+                <input type="password" name="password">
+            </div>
+
+            <div class="edit-input">
+                <label for="age">Age</label>
+                <input type="text" name="age"
                 {{#if age}} value="{{age}}" {{/if}}>
+            </div>
 
-            <label for="city">City</label>
-            <input id="autocomplete"
+            <div class="edit-input">
+                <label for="city">City</label>
+                <input id="autocomplete"
                 placeholder="Enter your city"
                 name="city"
                 type="text"
                 autocomplete="off";
                 {{#if city}} value="{{city}}" {{/if}}>
+            </div>
 
-            <!-- <input type="text" name="city"
-                {{#if city}} value="{{city}}" {{/if}}> -->
-
-            <label for="url">Homepage</label>
-            <input type="text" name="url"
+            <div class="edit-input">
+                <label for="url">Homepage</label>
+                <input type="text" name="url"
                 {{#if url}} value="{{url}}" {{/if}}>
+            </div>
+
             <input type="hidden" id="coord-input" name="coord"
-                {{#if coord}} value="{{coord}}" {{/if}}>
-        {{/profile}}
+            {{#if coord}} value="{{coord}}" {{/if}}>
+            {{/profile}}
 
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <button type="submit" name="submit">Submit</button>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button type="submit" name="submit">Submit</button>
 
-    </form>
-    <br>
-    <br>
+        </form>
 
-    <p>Delete your account</p>
-    <form action="/deleteaccount" method="post">
-        <input type="hidden" name="_csrf" value="{{csrfToken}}">
-        <button type="submit" name="">Delete account</button>
-    </form>
+        <div id="delete-account">
+            <form action="/deleteaccount" method="get">
+                <!-- <input type="hidden" name="_csrf" value="{{csrfToken}}"> -->
+                <button id="delete-button" type="submit">Delete account</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
 </div>
 
-<div id="map-container">
-    <div id="map"></div>
-</div>
 
 
 <script src="/map_profile.js"></script>

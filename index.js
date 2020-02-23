@@ -48,8 +48,12 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-    if (!req.session.user && req.url != '/register' && req.url != '/login') {
-        res.redirect('/register');
+    if (!req.session.user &&
+        req.url != '/register' &&
+        req.url != '/login' &&
+        req.url != '/cause'
+    ) {
+        return res.redirect('/cause');
     } else {
         next();
     }
@@ -66,8 +70,9 @@ exports.app = app;
 
 ///////////////////// Routes //////////////////////
 app.get("/", (req, res) => {
-    return res.redirect("/register");
+    return res.redirect("/cause");
 });
+require("./routes/cause");
 require("./routes/auth");
 require("./routes/petition");
 require("./routes/profile");

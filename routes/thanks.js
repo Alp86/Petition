@@ -13,6 +13,7 @@ app.get("/thanks", requireSignature, (req, res) => {
             res.render("thanks", {
                 layout: "main",
                 login: true,
+                signed: true,
                 numSigs: getNumSigs(),
                 signature: signature
             });
@@ -50,6 +51,7 @@ app.get("/signers", requireSignature, (req, res) => {
         res.render("signers", {
             layout: "main",
             login: true,
+            signed: true,
             apiKey: apiKey,
             coords: coords,
             signers
@@ -70,6 +72,7 @@ app.get("/signers/:city", requireSignature, (req, res) => {
             res.render("signers", {
                 layout: "main",
                 login: true,
+                signed: true,
                 apiKey: apiKey,
                 coords: coords,
                 signers
