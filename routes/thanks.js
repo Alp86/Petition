@@ -4,7 +4,7 @@ const {
     selectSigners, selectSignersByCity,
     selectSignature, deleteSignature
 } = require('../utils/db');
-const secrets = require("../secrets");
+const apiKey = process.env.apiKey || require("../secrets").apiKey;
 
 app.get("/thanks", requireSignature, (req, res) => {
     selectSignature(req.session.user.userID)
@@ -50,7 +50,7 @@ app.get("/signers", requireSignature, (req, res) => {
         res.render("signers", {
             layout: "main",
             login: true,
-            apiKey: secrets.apiKey,
+            apiKey: apiKey,
             coords: coords,
             signers
         });
@@ -70,7 +70,7 @@ app.get("/signers/:city", requireSignature, (req, res) => {
             res.render("signers", {
                 layout: "main",
                 login: true,
-                apiKey: secrets.apiKey,
+                apiKey: apiKey,
                 coords: coords,
                 signers
             });

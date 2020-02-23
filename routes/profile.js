@@ -4,13 +4,13 @@ const {
     insertUserProfile, updateUser, updateUserPW,
     selectUserProfile, updateProfile, deleteUser
 } = require('../utils/db');
-const secrets = require("../secrets");
+const apiKey = process.env.apiKey || require("../secrets").apiKey;
 
 app.get("/profile", (req, res) => {
     res.render("profile", {
         layout: "main",
         login: true,
-        apiKey: secrets.apiKey
+        apiKey: apiKey
     });
 });
 
@@ -50,7 +50,7 @@ app.get("/profile/edit", (req, res) => {
             res.render("edit", {
                 layout: "main",
                 login: true,
-                apiKey: secrets.apiKey,
+                apiKey: apiKey,
                 profile
             });
         })
