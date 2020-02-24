@@ -1,11 +1,7 @@
 var map;
 
 var coords = JSON.parse(document.getElementById("coords").value);
-
-var center;
-if (coords.length == 1) {
-    center = {lat: coords[0].coord.lat, lng: coords[0].coord.lng};
-}
+console.log("coords:", coords);
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -38,4 +34,5 @@ function initMap() {
             'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
         }
     );
+
 }
