@@ -14,22 +14,39 @@ function initMap() {
 
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    var markers = coords.map(function(coord, i) {
-        if (coord.coord) {
+    var markers = [];
+    for (var i = 0; i < coords.length; i++) {
+        if (coords[i].coord) {
             var marker = new google.maps.Marker({
-                position: coord.coord,
+                position: coords[i].coord,
                 label: labels[i % labels.length]
             });
             var infowindow = new google.maps.InfoWindow({
-                content: coord.name
+                content: coords[i].name
             });
 
             marker.addListener("click", function() {
                 infowindow.open(map, marker);
             });
-            return marker;
+            markers.push(marker);
         }
-    });
+    }
+    // var markers = coords.map(function(coord, i) {
+    //     if (coord.coord) {
+    //         var marker = new google.maps.Marker({
+    //             position: coord.coord,
+    //             label: labels[i % labels.length]
+    //         });
+    //         var infowindow = new google.maps.InfoWindow({
+    //             content: coord.name
+    //         });
+    //
+    //         marker.addListener("click", function() {
+    //             infowindow.open(map, marker);
+    //         });
+    //         return marker;
+    //     }
+    // });
 
     var markerCluster = new MarkerClusterer(map, markers,
         { imagePath:
