@@ -67,8 +67,12 @@ app.get("/signers/:city", requireSignature, (req, res) => {
             let signers = result.rows;
             let coords = [];
             for (var i = 0; i < signers.length; i++) {
-                coords.push(signers[i].coord);
+                coords.push({
+                    name: `${signers[i].first} ${signers[i].last}`,
+                    coord: JSON.parse(signers[i].coord)
+                });
             }
+            coords = JSON.stringify(coords);
             res.render("signers", {
                 layout: "main",
                 login: true,

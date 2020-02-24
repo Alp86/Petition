@@ -15,18 +15,20 @@ function initMap() {
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     var markers = coords.map(function(coord, i) {
-        var marker = new google.maps.Marker({
-            position: coord.coord,
-            label: labels[i % labels.length]
-        });
-        var infowindow = new google.maps.InfoWindow({
-            content: coord.name
-        });
+        if (coord.coord) {
+            var marker = new google.maps.Marker({
+                position: coord.coord,
+                label: labels[i % labels.length]
+            });
+            var infowindow = new google.maps.InfoWindow({
+                content: coord.name
+            });
 
-        marker.addListener("click", function() {
-            infowindow.open(map, marker);
-        });
-        return marker;
+            marker.addListener("click", function() {
+                infowindow.open(map, marker);
+            });
+            return marker;
+        }
     });
 
     var markerCluster = new MarkerClusterer(map, markers,
